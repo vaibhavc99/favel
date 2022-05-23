@@ -1,7 +1,7 @@
 import socket
 import logging
 
-class Validation:
+class Validator:
     def __init__(self, approaches):
         self.approaches = approaches
 
@@ -22,7 +22,7 @@ class Validation:
         """
         Validate the assertions using approach.
         """
-        client = self._connect(self.approaches[approach])
+        client = self._connect(int(self.approaches[approach]))
         result = []
 
         for assertion in assertions:
@@ -41,7 +41,7 @@ class Validation:
         client.send(request.encode())
         return client.recv(1024).decode()
 
-approaches = dict()
-approaches['knowledgestream'] = 4444
-test = Validation(approaches)
-print(test.validate([("<http://dbpedia.org/resource/Al_Attles>", "<http://dbpedia.org/ontology/team>", "<http://dbpedia.org/resource/Golden_State_Warriors>")]))
+#approaches = dict()
+#approaches['knowledgestream'] = 4444
+#test = Validation(approaches)
+#print(test.validate([("<http://dbpedia.org/resource/Al_Attles>", "<http://dbpedia.org/ontology/team>", "<http://dbpedia.org/resource/Golden_State_Warriors>")]))
