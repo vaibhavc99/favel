@@ -13,7 +13,9 @@ class Validator:
         """
         result = []
         for approach in self.approaches.keys():
-            result.extend(self._execute(approach, assertions))
+            approachResult = self._execute(approach, assertions)
+            if approachResult != None:
+                result.extend(approachResult)
             
         return result
         
@@ -22,14 +24,17 @@ class Validator:
         """
         Validate the assertions using approach.
         """
-        client = self._connect(int(self.approaches[approach]))
-        result = []
+        try:
+            client = self._connect(int(self.approaches[approach]))
+            result = []
 
-        for assertion in assertions:
-            result.append((approach, assertion, self._sendAssertion(client, assertion)))
+            for assertion in assertions:
+                result.append((approach, assertion, self._sendAssertion(client, assertion)))
             
-        client.close()
-        return result
+            client.close()
+            return result
+        except ConnectionRefusedError:
+            logging.info("Cannot connect to approach '{}'".format(approach))
 
     def _connect(self, port):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,8 +45,3 @@ class Validator:
         request = "{} {} {}.".format(assertion[0], assertion[1], assertion[2])
         client.send(request.encode())
         return client.recv(1024).decode()
-
-#approaches = dict()
-#approaches['knowledgestream'] = 4444
-#test = Validation(approaches)
-#print(test.validate([("<http://dbpedia.org/resource/Al_Attles>", "<http://dbpedia.org/ontology/team>", "<http://dbpedia.org/resource/Golden_State_Warriors>")]))
