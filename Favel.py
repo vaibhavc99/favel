@@ -4,9 +4,18 @@ from FactValidationService.Validator import Validator
 
 def main():
     # Read config
-    logging.info("Reading configuration file")
     configParser = configparser.ConfigParser()
     configParser.read("favel.conf")
+
+    # Configure logging
+    loggingOptions = dict()
+    loggingOptions['debug'] = logging.DEBUG
+    loggingOptions['info'] = logging.INFO
+    loggingOptions['error'] = logging.ERROR
+    loggingOptions['critical'] = logging.CRITICAL
+    
+    logging.basicConfig(level=loggingOptions[configParser['Logging']['level']])
+    
     
     # Example assertion
     assertions = [
@@ -14,7 +23,7 @@ def main():
         ]
 
     # Validate assertions
-    logging.info("Validation assertions")
+    logging.info("Validating assertions")
     validator = Validator(dict(configParser['Approaches']))
     result = validator.validate(assertions)
     

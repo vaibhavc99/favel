@@ -15,8 +15,6 @@ class JobRunner(threading.Thread):
         result = self._execute()
         if result != None:
             self.result.extend(result)
-        else:
-            logging.warning("{} produced no results".format(self.approach))
 
     def _execute(self):
         """
@@ -26,6 +24,7 @@ class JobRunner(threading.Thread):
             client = self._connect()
             result = []
 
+            logging.info("Validating assertions using {}".format(self.approach))
             for assertion in self.assertions:
                 result.append((self.approach, assertion, self._sendAssertion(client, assertion)))
             
