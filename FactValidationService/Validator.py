@@ -1,5 +1,6 @@
-import socket
 import logging
+
+from FactValidationService.JobRunner import JobRunner as JobRunner
 
 class Validator:
     def __init__(self, approaches):
@@ -12,36 +13,18 @@ class Validator:
         Returns list of triples (approach, assertion, score)
         """
         result = []
+        jobs = []
+        
+        # Start a thread for each approach
         for approach in self.approaches.keys():
-            approachResult = self._execute(approach, assertions)
-            if approachResult != None:
-                result.extend(approachResult)
+            jobRunner = JobRunner(approach, int(self.approaches[approach]), assertions, result)
+            jobs.append(jobRunner)
+            jobRunner.start()
             
+        # Wait for all threads to finish
+        for job in jobs:
+            job.join()
+
         return result
         
 
-    def _execute(self, approach:str, assertions):
-        """
-        Validate the assertions using approach.
-        """
-        try:
-            client = self._connect(int(self.approaches[approach]))
-            result = []
-
-            for assertion in assertions:
-                result.append((approach, assertion, self._sendAssertion(client, assertion)))
-            
-            client.close()
-            return result
-        except ConnectionRefusedError:
-            logging.info("Cannot connect to approach '{}'".format(approach))
-
-    def _connect(self, port):
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(("127.0.0.1", port))
-        return client
-
-    def _sendAssertion(self, client, assertion):
-        request = "{} {} {}.".format(assertion[0], assertion[1], assertion[2])
-        client.send(request.encode())
-        return client.recv(1024).decode()
