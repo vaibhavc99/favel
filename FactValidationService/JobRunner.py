@@ -16,7 +16,7 @@ class JobRunner(threading.Thread):
         self.cachePath = cachePath
     
     def run(self):
-        self.cache = ValidatorCache(self.cachePath)
+        self.cache = ValidatorCache(self.cachePath, self.approach)
         result = self._execute()
         if result != None:
             self.result.extend(result)
@@ -50,7 +50,7 @@ class JobRunner(threading.Thread):
     def _validateAssertion(self, client, assertion):
         result = None
         if self.useCache:
-            result = self.cache.getScore(self.approach, assertion[0], assertion[1], assertion[2])
+            result = self.cache.getScore(assertion[0], assertion[1], assertion[2])
             
         if result != None:
             return result
@@ -58,7 +58,7 @@ class JobRunner(threading.Thread):
         result = self._sendAssertion(client, assertion)
             
         if self.useCache and (not "ERROR" in result):
-            self.cache.insert(self.approach, assertion[0], assertion[1], assertion[2], result)
+            self.cache.insert(assertion[0], assertion[1], assertion[2], result)
             
         return result
     
