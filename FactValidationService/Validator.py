@@ -3,8 +3,10 @@ import logging
 from FactValidationService.JobRunner import JobRunner as JobRunner
 
 class Validator:
-    def __init__(self, approaches):
+    def __init__(self, approaches, cachePath:str, useCache=True):
         self.approaches = approaches
+        self.cachePath = cachePath
+        self.useCache = useCache
 
     def validate(self, assertions:list):
         """
@@ -17,7 +19,7 @@ class Validator:
         
         # Start a thread for each approach
         for approach in self.approaches.keys():
-            jobRunner = JobRunner(approach, int(self.approaches[approach]), assertions, result)
+            jobRunner = JobRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath, self.useCache)
             jobs.append(jobRunner)
             jobRunner.start()
             

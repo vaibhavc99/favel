@@ -5,7 +5,7 @@ from FactValidationService.ValidatorCache import ValidatorCache
 
 class JobRunner(threading.Thread):
 
-    def __init__(self, approach:str, port:int, assertions:list, result:list, useCache=True):
+    def __init__(self, approach:str, port:int, assertions:list, result:list, cachePath:str, useCache=True):
         threading.Thread.__init__(self)
         self.approach = approach
         self.port = port
@@ -13,9 +13,10 @@ class JobRunner(threading.Thread):
         self.result = result
         self.errorCount = 0
         self.useCache = useCache
+        self.cachePath = cachePath
     
     def run(self):
-        self.cache = ValidatorCache("validatorCache.db")
+        self.cache = ValidatorCache(self.cachePath)
         result = self._execute()
         if result != None:
             self.result.extend(result)
