@@ -25,6 +25,7 @@ class ValidatorCache:
         self.db.commit()
     
     def getScore(self, approach:str, sub:str, pred:str, obj:str):
-        cursor = self.db.execute('SELECT score FROM validatorCache WHERE approach="{}" AND subject="{}" AND predicate="{}" AND object="{}"'.format(approach, sub, pred, obj))
+        input = [(approach), (sub), (pred), (obj)]
+        cursor = self.db.execute('SELECT score FROM validatorCache WHERE approach=? AND subject=? AND predicate=? AND object=?', input)
         for row in cursor:
             return row[0]
