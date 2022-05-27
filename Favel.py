@@ -23,18 +23,13 @@ def main():
     logging.basicConfig(level=loggingOptions[configParser['General']['logging']])
     
     
-    # Example assertion
-    assertions = [
-        ("<http://dbpedia.org/resource/Al_Attles>", "<http://dbpedia.org/ontology/team>", "<http://dbpedia.org/resource/Golden_State_Warriors>")
-        ]
-    
     # Read input
     input = Input()
     assertions = input.getInput(args.data)
 
     # Validate assertions
     logging.info("Validating assertions")
-    validator = Validator(dict(configParser['Approaches']))
+    validator = Validator(dict(configParser['Approaches']), configParser['General']['cachePath'], configParser['General']['useCache'])
     result = validator.validate(assertions)
     
     # Print results
