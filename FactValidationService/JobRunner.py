@@ -10,11 +10,14 @@ class JobRunner(threading.Thread):
         self.port = port
         self.assertions = assertions
         self.result = result
+        self.errorCount = 0
     
     def run(self):
         result = self._execute()
         if result != None:
             self.result.extend(result)
+            logging.info("Validated {} out of {} assertions successfully using {}."
+                         .format(len(self.assertions) - self.errorCount, len(self.assertions), self.approach))
 
     def _execute(self):
         """
@@ -26,7 +29,13 @@ class JobRunner(threading.Thread):
 
             logging.info("Validating assertions using {}".format(self.approach))
             for assertion in self.assertions:
-                result.append((self.approach, assertion, self._sendAssertion(client, assertion)))
+                response = self._sendAssertion(client, assertion)
+                if "ERROR" in response:
+                    self.errorCount += 1
+                    logging.warning("'{}' while validating {} using {}."
+                                    .format(response, assertion, self.approach))
+                else:
+                    result.append((self.approach, assertion, response))
             
             client.close()
             return result
