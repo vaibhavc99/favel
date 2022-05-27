@@ -20,7 +20,8 @@ class ValidatorCache:
         self.db.close()
         
     def insert(self, approach:str, sub:str, pred:str, obj:str, score:float):
-        self.db.execute("INSERT INTO validatorCache (approach, subject, predicate, object, score) VALUES ('{}', '{}', '{}', '{}', {})".format(approach, sub, pred, obj, score))
+        temp = [(approach), (sub), (pred), (obj), (score)]
+        self.db.execute("INSERT INTO validatorCache (approach, subject, predicate, object, score) VALUES (?, ?, ?, ?, ?)", temp)
         self.db.commit()
     
     def getScore(self, approach:str, sub:str, pred:str, obj:str):
