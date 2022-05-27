@@ -12,4 +12,4 @@ class Input:
         line = line.replace('\n', '')
         line = line.replace('"', '')
         elements = line.split(' ')
-        return (elements[0], elements[1], elements[2].replace('.', ''))
+        return (elements[0], elements[1], elements[2][:-1])
