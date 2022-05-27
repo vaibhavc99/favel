@@ -1,3 +1,5 @@
+import logging
+
 class Input:
     # TODO: this is just an example method
     
@@ -6,6 +8,7 @@ class Input:
         with open(filePath, 'r') as file:
             for line in file.readlines():
                 result.append(self.parseLine(line))
+        logging.info("Read {} assertions".format(len(result)))
         return result 
                 
     def parseLine(self, line:str):
