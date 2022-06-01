@@ -22,8 +22,8 @@ def main():
     validator = Validator(dict(configParser['Approaches']), configParser['General']['cachePath'], configParser['General']['useCache'])
     result = validator.validate(assertions)
     
-    # Print results
-    print(result)
+    # Write results
+    # TODO: write results to file
     
 def parseArguments():
     argumentParser = argparse.ArgumentParser()
@@ -39,6 +39,7 @@ def configureLoggin(configParser:configparser.ConfigParser):
     loggingOptions = dict()
     loggingOptions['debug'] = logging.DEBUG
     loggingOptions['info'] = logging.INFO
+    loggingOptions['warning'] = logging.WARNING
     loggingOptions['error'] = logging.ERROR
     loggingOptions['critical'] = logging.CRITICAL
     
