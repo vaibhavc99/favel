@@ -1,7 +1,7 @@
 import threading
 import socket
 import logging
-from FactValidationService.ValidatorCache import ValidatorCache
+from FactValidationService.Cache import Cache
 from FactValidationService.AssertionsRunner import AssertionsRunner
 
 class AssertionsCacheRunner(AssertionsRunner):
@@ -12,7 +12,7 @@ class AssertionsCacheRunner(AssertionsRunner):
         self.cachePath = cachePath
     
     def run(self):
-        self.cache = ValidatorCache(self.cachePath, self.approach)
+        self.cache = Cache(self.cachePath, self.approach)
         super().run()
         self.cache.close()
             

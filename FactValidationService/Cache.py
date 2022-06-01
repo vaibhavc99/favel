@@ -1,6 +1,6 @@
 import sqlite3, logging
 
-class ValidatorCache:
+class Cache:
     def __init__(self, dbpath:str, approach:str):
         self.db = sqlite3.connect(dbpath)
         self.approach = approach
