@@ -1,6 +1,7 @@
 import logging
 
-from FactValidationService.JobRunner import JobRunner as JobRunner
+from FactValidationService.AssertionsRunner import AssertionsRunner
+from FactValidationService.AssertionsCacheRunner import AssertionsCacheRunner
 
 class Validator:
     def __init__(self, approaches, cachePath:str, useCache=True):
@@ -19,7 +20,10 @@ class Validator:
         
         # Start a thread for each approach
         for approach in self.approaches.keys():
-            jobRunner = JobRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath, self.useCache)
+            if self.useCache:
+                jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath)
+            else:
+                jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions, result)
             jobs.append(jobRunner)
             jobRunner.start()
             
@@ -28,5 +32,8 @@ class Validator:
             job.join()
 
         return result
+        
+    def validateCache(self):
+        pass
         
 
