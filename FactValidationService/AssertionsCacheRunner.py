@@ -16,12 +16,12 @@ class AssertionsCacheRunner(AssertionsRunner):
         super().run()
         self.cache.close()
             
-    def _validateAssertion(self, client, assertion):
+    def _validateAssertion(self, assertion):
         result = self.cache.getScore(assertion[0], assertion[1], assertion[2])
         if result != None:
             return result
         
-        result = super()._validateAssertion(client, assertion)
+        result = super()._validateAssertion(assertion)
         if not "ERROR" in result:
             self.cache.insert(assertion[0], assertion[1], assertion[2], result)
         return result

@@ -13,12 +13,11 @@ class AssertionsRunner(AbstractJobRunner):
     
     def run(self):
         try:
-            self.server = self._connect()
+            result = self._execute()
+            self.server.close()
         except ConnectionRefusedError:
-            return 
-        
-        result = self._execute()
-        self.server.close()
+            return
+
         if result != None:
             self.result.extend(result)
             logging.info("Validated {} out of {} assertions successfully using {}."
@@ -32,7 +31,7 @@ class AssertionsRunner(AbstractJobRunner):
 
         logging.info("Validating assertions using {}".format(self.approach))
         for assertion in self.assertions:
-            response = self._validateAssertion(self.server, assertion)
+            response = self._validateAssertion(assertion)
             if type(response) == str and "ERROR" in response:
                 self.errorCount += 1
                 logging.warning("'{}' while validating {} using {}."
