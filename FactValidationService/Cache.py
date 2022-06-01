@@ -25,9 +25,21 @@ class Cache:
         input = [(sub), (pred), (obj), (score)]
         self.db.execute("INSERT INTO {}_cache (subject, predicate, object, score) VALUES (?, ?, ?, ?)".format(self.approach), input)
         self.db.commit()
+        
+    def update(self, sub:str, pred:str, obj:str, score:float):
+        input = [(score), (sub), (pred), (obj)]
+        self.db.execute("UPDATE {}_cache SET score=? WHERE subject=? AND predicate=? AND object=?".format(self.approach), input)
+        self.db.commit()
     
     def getScore(self, sub:str, pred:str, obj:str):
         input = [(sub), (pred), (obj)]
         cursor = self.db.execute('SELECT score FROM {}_cache WHERE subject=? AND predicate=? AND object=?'.format(self.approach), input)
         for row in cursor:
             return row[0]
+        
+    def getAll(self):
+        cursor = self.db.execute('SELECT * FROM {}_cache'.format(self.approach))
+        rows = []
+        for row in cursor:
+            rows.append(row)
+            

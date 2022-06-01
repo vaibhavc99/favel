@@ -34,6 +34,14 @@ class Validator:
         return result
         
     def validateCache(self):
-        pass
+        for approach in self.approaches.keys():
+            jobRunner = CacheRunner(approach, int(self.approaches[approach]))
+            jobs.append(jobRunner)
+            jobRunner.start()
+            
+        # Wait for all threads to finish
+        for job in jobs:
+            job.join()
+            
         
 
