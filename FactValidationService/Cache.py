@@ -42,4 +42,5 @@ class Cache:
         rows = []
         for row in cursor:
             rows.append(row)
+        return rows
             
