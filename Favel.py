@@ -5,12 +5,12 @@ from InputService.Input import Input
 from ContainerService.Containers import Containers
 
 def main():
-    
+
     # Start Containers
     containers = Containers()
-    containers.start_containers()
+    containers.startContainers()
     containers.status()
-    
+
     # Parse arguments
     args = parseArguments()
     
@@ -28,9 +28,9 @@ def main():
     
     # Write results
     # TODO: write results to file
-    
+
     # Stop Containers
-    containers.stop_containers()
+    containers.rmContainers()
     
 def validateInputData(args, configParser):
     # Read input
@@ -39,7 +39,7 @@ def validateInputData(args, configParser):
 
     # Validate assertions
     logging.info("Validating assertions")
-    validator = Validator(dict(configParser['Approaches']), configParser['General']['cachePath'], configParser['General']['useCache'])
+    validator = Validator(dict(configParser['Approaches']),configParser['General']['cachePath'], configParser['General']['useCache'])
     result = validator.validate(assertions)
 
 def validateCache(args, configParser):
