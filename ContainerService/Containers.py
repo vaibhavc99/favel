@@ -1,23 +1,25 @@
-from python_on_whales import docker
+from python_on_whales import DockerClient
 
 class Containers:
+	def __init__(self):
+		self.docker = DockerClient(compose_files=["./ContainerService/docker-compose.yml"])
 
-	def start_containers(self):
-		docker.compose.up(detach=True)
+	def startContainers(self):
+		self.docker.compose.up(detach=True)
+		while True:
+			if "Waiting for connection" in self.docker.compose.logs(tail=1,no_log_prefix=True):
+				print("Servers started")
+				break
+			else:
+				continue
 
-	def stop_containers(self):
-		docker.compose.stop()
+	def stopContainers(self):
+		self.docker.compose.stop()
 
-	def remove_containers(self):
-		docker.compose.down()
+	def rmContainers(self):
+		self.docker.compose.down()
 
-	def staus(self):
-		for container in docker.compose.ps():
+	def status(self):
+		for container in self.docker.compose.ps():
 			print(container.name, container.state.status)
 
-#Just to test
-
-c = Containers()		
-c.start_containers()
-c.staus()
-c.stop_containers()
