@@ -4,16 +4,22 @@ class Containers:
 	def __init__(self):
 		self.docker = DockerClient(compose_files=["./ContainerService/docker-compose.yml"])
 
-	def start_containers(self):
+	def startContainers(self):
 		self.docker.compose.up(detach=True)
+		while True:
+			if "Waiting for connection" in self.docker.compose.logs(tail=1,no_log_prefix=True):
+				print("Servers started")
+				break
+			else:
+				continue
 
-	def stop_containers(self):
+	def stopContainers(self):
 		self.docker.compose.stop()
 
-	def remove_containers(self):
+	def rmContainers(self):
 		self.docker.compose.down()
 
-	def staus(self):
+	def status(self):
 		for container in self.docker.compose.ps():
 			print(container.name, container.state.status)
 
