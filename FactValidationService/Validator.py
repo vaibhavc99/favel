@@ -8,7 +8,10 @@ class Validator:
     def __init__(self, approaches, cachePath:str=None, useCache:bool=True):
         self.approaches = approaches
         self.cachePath = cachePath
-        self.useCache = useCache
+        if type(useCache) == str:
+            self.useCache = useCache == 'True'
+        else:
+            self.useCache = useCache
 
     def validate(self, assertions:list):
         """
@@ -21,8 +24,7 @@ class Validator:
         
         # Start a thread for each approach
         for approach in self.approaches.keys():
-            # TODO: fix, always true
-            if bool(self.useCache):
+            if self.useCache:
                 jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath)
             else:
                 jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions, result)
