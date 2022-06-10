@@ -4,6 +4,8 @@ class Assertion:
         self.predicate = predicate
         self.object = object
         self._expectedScore = None
+        self.ensembleScore = None
+        # self.score['Approach'] = approachScore
         self.score = dict()
         
     @property
