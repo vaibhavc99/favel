@@ -13,13 +13,12 @@ class AssertionsRunner(AbstractJobRunner):
     
     def run(self):
         try:
-            result = self._execute()
+            self._execute()
             self.server.close()
         except ConnectionRefusedError:
             return
 
-        if result != None:
-            self.result.extend(result)
+        if self.errorCount < len(self.assertions):
             logging.info("Validated {} out of {} assertions successfully using {}."
                          .format(len(self.assertions) - self.errorCount, len(self.assertions), self.approach))
 
@@ -27,16 +26,13 @@ class AssertionsRunner(AbstractJobRunner):
         """
         Validate the assertions using self.approach.
         """
-        result = []
-
         logging.info("Validating assertions using {}".format(self.approach))
         for assertion in self.assertions:
             response = self._validateAssertion(assertion)
+
             if type(response) == str and "ERROR" in response:
                 self.errorCount += 1
                 logging.warning("'{}' while validating {} using {}."
                                 .format(response, assertion, self.approach))
             else:
-                result.append((self.approach, assertion, response))
-            
-        return result
+                assertion.score[self.approach] = float(response)

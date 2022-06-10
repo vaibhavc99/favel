@@ -1,6 +1,7 @@
 import threading
 import socket
 import logging
+from datastructures.Assertion import Assertion
 
 class AbstractJobRunner(threading.Thread):
 
@@ -10,11 +11,19 @@ class AbstractJobRunner(threading.Thread):
         self.port = port
         self.server = None
     
-    def _validateAssertion(self, assertion):
+    def _validateAssertion(self, assertion:Assertion):
         """
         Validate a single assertion.
         """
-        return self._sendAssertion(assertion)
+        # If not connected, connect to server
+        if self.server == None:
+            self._connect()
+            
+        # Send assertion in turtle format
+        self.server.send(assertion.getTurtle().encode())
+        
+        # Receive score
+        return self.server.recv(1024).decode()
     
     def _connect(self):
         try:
@@ -23,10 +32,3 @@ class AbstractJobRunner(threading.Thread):
         except ConnectionRefusedError as ex:
             logging.warning("Cannot connect to approach '{}'".format(self.approach))
             raise(ex)
-
-    def _sendAssertion(self,  assertion):
-        request = "{} {} {}.".format(assertion[0], assertion[1], assertion[2])
-        if self.server == None:
-            self._connect()
-        self.server.send(request.encode())
-        return self.server.recv(1024).decode()

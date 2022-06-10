@@ -13,15 +13,16 @@ class Validator:
     def validate(self, assertions:list):
         """
         Validate the given assertions on every approach.
-        Assertions expected as a list of triples [(s1, p1, o1), (s2, p2, o2), ...]
-        Returns list of triples (approach, assertion, score)
+        Assertions expected as a list of assertions.
+        Returns list of assertions with their scores added to the Assertion.score[approach] dictionary.
         """
         result = []
         jobs = []
         
         # Start a thread for each approach
         for approach in self.approaches.keys():
-            if self.useCache:
+            # TODO: fix, always true
+            if bool(self.useCache):
                 jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath)
             else:
                 jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions, result)
