@@ -19,15 +19,14 @@ class Validator:
         Assertions expected as a list of assertions.
         Returns list of assertions with their scores added to the Assertion.score[approach] dictionary.
         """
-        result = []
         jobs = []
         
         # Start a thread for each approach
         for approach in self.approaches.keys():
             if self.useCache:
-                jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath)
+                jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, self.cachePath)
             else:
-                jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions, result)
+                jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions)
             jobs.append(jobRunner)
             jobRunner.start()
             
@@ -35,7 +34,7 @@ class Validator:
         for job in jobs:
             job.join()
 
-        return result
+        return assertions
         
     def validateCache(self):
         jobs = []

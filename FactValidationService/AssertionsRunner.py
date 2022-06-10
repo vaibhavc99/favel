@@ -5,10 +5,9 @@ from FactValidationService.AbstractJobRunner import AbstractJobRunner
 
 class AssertionsRunner(AbstractJobRunner):
 
-    def __init__(self, approach:str, port:int, assertions:list, result:list):
+    def __init__(self, approach:str, port:int, assertions:list):
         super().__init__(approach, port)
         self.assertions = assertions
-        self.result = result
         self.errorCount = 0
     
     def run(self):

@@ -6,8 +6,8 @@ from FactValidationService.AssertionsRunner import AssertionsRunner
 
 class AssertionsCacheRunner(AssertionsRunner):
 
-    def __init__(self, approach:str, port:int, assertions:list, result:list, cachePath:str):
-        super().__init__(approach, port, assertions, result)
+    def __init__(self, approach:str, port:int, assertions:list, cachePath:str):
+        super().__init__(approach, port, assertions)
         threading.Thread.__init__(self)
         self.cachePath = cachePath
     
