@@ -1,4 +1,5 @@
 import logging
+from datastructures.Assertion import Assertion
 
 class Input:
     # TODO: this is just an example method
@@ -15,4 +16,4 @@ class Input:
         line = line.replace('\n', '')
         line = line.replace('"', '')
         elements = line.split(' ')
-        return (elements[0], elements[1], elements[2][:-1])
+        return (Assertion(elements[0], elements[1], elements[2][:-1]))
