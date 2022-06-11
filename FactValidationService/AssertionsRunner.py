@@ -20,6 +20,7 @@ class AssertionsRunner(AbstractJobRunner):
 
         if result != None:
             self.result.extend(result)
+
             logging.info("Validated {} out of {} assertions successfully using {}."
                          .format(len(self.assertions) - self.errorCount, len(self.assertions), self.approach))
 
@@ -38,5 +39,9 @@ class AssertionsRunner(AbstractJobRunner):
                                 .format(response, assertion, self.approach))
             else:
                 result.append((self.approach, assertion, response))
-            
+ 
+        with open("./OutputService/Outputs/Output_Raw.csv", 'w+') as fp:
+            for item in result:
+                fp.write("{}\n".format(item))
+
         return result
