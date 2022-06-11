@@ -3,6 +3,7 @@ import configparser, logging, argparse
 from FactValidationService.Validator import Validator
 from InputService.Input import Input
 from ContainerService.Containers import Containers
+from OutputService.Output import Output
 
 def main():
 
@@ -26,8 +27,9 @@ def main():
     else:
         validateInputData(args, configParser)    
     
-    # Write results
-    # TODO: write results to file
+    # Outputs written to a file './OutputService/Outputs/Output_Clean.csv'
+    op = Output()
+    op.getCleanOutput()
 
     # Stop Containers
     containers.rmContainers()
@@ -39,7 +41,7 @@ def validateInputData(args, configParser):
 
     # Validate assertions
     logging.info("Validating assertions")
-    validator = Validator(dict(configParser['Approaches']),configParser['General']['cachePath'], configParser['General']['useCache'])
+    validator = Validator(dict(configParser['Approaches']), configParser['General']['cachePath'], configParser['General']['useCache'])
     result = validator.validate(assertions)
 
 def validateCache(args, configParser):
