@@ -2,8 +2,16 @@ import configparser, logging, argparse
 
 from FactValidationService.Validator import Validator
 from InputService.Input import Input
+from ContainerService.Containers import Containers
+from OutputService.Output import Output
 
 def main():
+
+    # Start Containers
+    containers = Containers()
+    containers.startContainers()
+    containers.status()
+
     # Parse arguments
     args = parseArguments()
     
@@ -19,8 +27,12 @@ def main():
     else:
         validateInputData(args, configParser)    
     
-    # Write results
-    # TODO: write results to file
+    # Outputs written to a file './OutputService/Outputs/Output_Clean.csv'
+    op = Output()
+    op.getCleanOutput()
+
+    # Stop Containers
+    containers.rmContainers()
     
 def validateInputData(args, configParser):
     # Read input

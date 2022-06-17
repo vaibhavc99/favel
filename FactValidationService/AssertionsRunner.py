@@ -35,3 +35,4 @@ class AssertionsRunner(AbstractJobRunner):
                                 .format(response, assertion, self.approach))
             else:
                 assertion.score[self.approach] = float(response)
+
