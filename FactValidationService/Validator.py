@@ -8,23 +8,25 @@ class Validator:
     def __init__(self, approaches, cachePath:str=None, useCache:bool=True):
         self.approaches = approaches
         self.cachePath = cachePath
-        self.useCache = useCache
+        if type(useCache) == str:
+            self.useCache = useCache == 'True'
+        else:
+            self.useCache = useCache
 
     def validate(self, assertions:list):
         """
         Validate the given assertions on every approach.
-        Assertions expected as a list of triples [(s1, p1, o1), (s2, p2, o2), ...]
-        Returns list of triples (approach, assertion, score)
+        Assertions expected as a list of assertions.
+        Returns list of assertions with their scores added to the Assertion.score[approach] dictionary.
         """
-        result = []
         jobs = []
         
         # Start a thread for each approach
         for approach in self.approaches.keys():
             if self.useCache:
-                jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, result, self.cachePath)
+                jobRunner = AssertionsCacheRunner(approach, int(self.approaches[approach]), assertions, self.cachePath)
             else:
-                jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions, result)
+                jobRunner = AssertionsRunner(approach, int(self.approaches[approach]), assertions)
             jobs.append(jobRunner)
             jobRunner.start()
             
@@ -32,7 +34,7 @@ class Validator:
         for job in jobs:
             job.join()
 
-        return result
+        return assertions
         
     def validateCache(self):
         jobs = []
